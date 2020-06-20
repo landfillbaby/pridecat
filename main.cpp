@@ -292,12 +292,21 @@ void parseCommandLine(int argc, char** argv) {
 					}
 				}
 				if (g_useColors) {
-					putc(' ', stdout);
+					fputs("\n    ", stdout);
+					g_trueColor = false;
 					for (const auto& color : flag.second.colors) {
 						setBackgroundColor(color);
 						putc(' ', stdout);
 					}
 					resetBackgroundColor();
+					fputs(" (nearest palette)\n    ", stdout);
+					g_trueColor = true;
+					for (const auto& color : flag.second.colors) {
+						setBackgroundColor(color);
+						putc(' ', stdout);
+					}
+					resetBackgroundColor();
+					fputs(" (truecolor)", stdout);
 				}
 				printf("\n");
 				printf("      %s\n\n", flag.second.description.c_str());
