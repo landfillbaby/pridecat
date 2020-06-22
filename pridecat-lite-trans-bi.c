@@ -11,23 +11,40 @@ reimplement the printf of hexadecimal?
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#define rgb(r, g, b) fputs("\033[38;2;" #r ";" #g ";" #b "m", stdout)
-#define x() if(l != 19) fputs("\033[39m", stdout)
+#ifdef PRIDEBG
+#define ESC "\033[4"
+#else
+#define ESC "\033[3"
+#endif
+#define rgb(r, g, b) fputs(ESC "8;2;" #r ";" #g ";" #b "m", stdout)
+#define x() if(l != 19) fputs(ESC "9m", stdout)
 static unsigned char l;
 static bool e;
 static void cat(FILE *f){
   int c;
 #define C(x) (c != x)
   while((c = getc(f)) >= 0){
-    if(!C('\n')) e = false;
-    else if(!e && C(' ') && C('\t') && C('\r') && C('\f') && C('\v')){
+    if(!C('\n')){
+#ifdef PRIDEBG
+      x();
+#endif
+      e = false;
+    }else if(!e && C(' ') && C('\t') && C('\r') && C('\f') && C('\v')){
       switch(l = (l + 1) % 10){
 	case 0: case 4: rgb(91, 206, 250); break;
 	case 1: case 3: rgb(245, 169, 184); break;
-	case 2: /*rgb(255, 255, 255);*/ fputs("\033[38;5;231m", stdout); break;
-	case 5: /*case 6:*/ rgb(214, 2, 112); break;
+	case 2: /*rgb(255, 255, 255);*/ fputs(ESC "8;5;231m", stdout); break;
+	case 5:
+#ifdef PRIDEBG
+	case 6:
+#endif
+	  rgb(214, 2, 112); break;
 	case 7: rgb(155, 79, 150); break;
-	case 8: /*case 9:*/ rgb(0, 56, 168);
+	case 8:
+#ifdef PRIDEBG
+	case 9:
+#endif
+	  rgb(0, 56, 168);
       }
       e = true;
     }
