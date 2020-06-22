@@ -17,7 +17,11 @@ reimplement the printf of hexadecimal?
 #define ESC "\033[3"
 #endif
 #define rgb(r, g, b) fputs(ESC "8;2;" #r ";" #g ";" #b "m", stdout)
+#ifdef PRIDEBG
+#define x() if(l != 19) fputs("\033[39;49m", stdout)
+#else
 #define x() if(l != 19) fputs(ESC "9m", stdout)
+#endif
 static unsigned char l;
 static bool e;
 static void cat(FILE *f){
@@ -26,10 +30,13 @@ static void cat(FILE *f){
   while((c = getc(f)) >= 0){
     if(!C('\n')){
 #ifdef PRIDEBG
-      x();
+      if(l != 19) fputs(ESC "9m", stdout);
 #endif
       e = false;
     }else if(!e && C(' ') && C('\t') && C('\r') && C('\f') && C('\v')){
+#ifdef PRIDEBG
+      if(l == 19) fputs("\033[38;5;16m", stdout); // black text
+#endif
       switch(l = (l + 1) % 10){
 	case 0: case 4: rgb(91, 206, 250); break;
 	case 1: case 3: rgb(245, 169, 184); break;
