@@ -1,8 +1,7 @@
 // inspired by https://github.com/lunasorcery/pridecat
 // vi: sw=2
 /*TODO:
-maybe add an argument for background color and black text
-single boolean replacing the 38 and 39 with 48 and 49
+merge pridecat, pridehl, pridebg into 1 program
 note to self: see getargs.h (not a public file yet)
 
 reimplement the printf of hexadecimal?
@@ -11,13 +10,13 @@ reimplement the printf of hexadecimal?
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#ifdef PRIDEBG
+#ifdef PRIDEHL
 #define ESC "\033[4"
 #else
 #define ESC "\033[3"
 #endif
 #define rgb(r, g, b) fputs(ESC "8;2;" #r ";" #g ";" #b "m", stdout)
-#ifdef PRIDEBG
+#ifdef PRIDEHL
 #define x() if(l != 19) fputs("\033[39;49m", stdout)
 #else
 #define x() if(l != 19) fputs(ESC "9m", stdout)
@@ -29,12 +28,12 @@ static void cat(FILE *f){
 #define C(x) (c != x)
   while((c = getc(f)) >= 0){
     if(!C('\n')){
-#ifdef PRIDEBG
+#ifdef PRIDEHL
       if(l != 19) fputs(ESC "9m", stdout);
 #endif
       e = false;
     }else if(!e && C(' ') && C('\t') && C('\r') && C('\f') && C('\v')){
-#ifdef PRIDEBG
+#ifdef PRIDEHL
       if(l == 19) fputs("\033[38;5;16m", stdout); // black text
 #endif
       switch(l = (l + 1) % 10){
@@ -42,13 +41,13 @@ static void cat(FILE *f){
 	case 1: case 3: rgb(245, 169, 184); break;
 	case 2: /*rgb(255, 255, 255);*/ fputs(ESC "8;5;231m", stdout); break;
 	case 5:
-#ifdef PRIDEBG
+#ifdef PRIDEHL
 	case 6:
 #endif
 	  rgb(214, 2, 112); break;
 	case 7: rgb(155, 79, 150); break;
 	case 8:
-#ifdef PRIDEBG
+#ifdef PRIDEHL
 	case 9:
 #endif
 	  rgb(0, 56, 168);
@@ -64,7 +63,7 @@ int main(int c, char **v){
   signal(SIGINT, abrt);
   if(c < 2) cat(stdin);
   else for(--c, ++v; c; --c, ++v){
-    if(**v == 45 && !v[0][1]) cat(stdin);
+    if(**v == '-' && !v[0][1]) cat(stdin);
     else{
       FILE *f = fopen(*v, "r");
       if(!f){
