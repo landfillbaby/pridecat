@@ -55,8 +55,7 @@ static void cat(FILE *f){
       e = true;
     }
     putc(c, stdout);
-  }
-}
+} }
 static void abrt(int signo){ x(); exit(signo); }
 int main(int c, char **v){
   l = 19;
@@ -73,7 +72,6 @@ int main(int c, char **v){
       }
       cat(f);
       fclose(f);
-    }
-  }
+  } }
   x();
 }

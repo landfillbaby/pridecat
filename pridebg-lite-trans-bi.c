@@ -27,9 +27,7 @@ static void cat(FILE *f){
 	case 7: rgb(155, 79, 150); break;
 	case 8: rgb(0, 56, 168); break;
 	case 6: case 9: fputs("\033[K", stdout);
-    }
-  }
-}
+} } }
 static void abrt(int signo){ x(); exit(signo); }
 int main(int c, char **v){
   signal(SIGINT, abrt);
@@ -47,7 +45,6 @@ int main(int c, char **v){
       }
       cat(f);
       fclose(f);
-    }
-  }
+  } }
   x();
 }
