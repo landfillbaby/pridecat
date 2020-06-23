@@ -67,7 +67,13 @@ int main(int c, char **v){
       FILE *f = fopen(*v, "r");
       if(!f){
 	x();
-	fprintf(stderr, "pridecat: Couldn't open \"%s\" for reading.\n", *v);
+	fprintf(stderr, "pride"
+#ifdef PRIDEHL
+	    "hl"
+#else
+	    "cat"
+#endif
+	    ": Couldn't open \"%s\" for reading.\n", *v);
 	return 1;
       }
       cat(f);
