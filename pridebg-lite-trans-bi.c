@@ -12,14 +12,20 @@ n = 2: clear whole line
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#define x() if(l != 19) fputs("\033[39;49m\033[K", stdout)
 #define rgb(r, g, b) fputs("\033[48;2;" #r ";" #g ";" #b "m\033[K", stdout)
-#define x() fputs("\033[39;49m\033[K", stdout)
-static unsigned char l;
+static unsigned char l, p;
 static void cat(FILE *f){
-  int c;
-  while((c = getc(f)) >= 0){
-    putc(c, stdout);
-    if(c == '\n') switch(l = (l + 1) % 10){
+  int c = getc(f);
+  if(c < 0) return;
+  if(l == 19) {
+    fputs("\033[38;5;16m", stdout); // black text
+    goto uhh;
+  }
+  do{
+    if(p == '\n'){
+uhh:
+      switch(l = (l + 1) % 10){
 	case 0: case 4: rgb(91, 206, 250); break;
 	case 1: case 3: rgb(245, 169, 184); break;
 	case 2: fputs("\033[48;5;231m\033[K", stdout); break;
@@ -37,12 +43,15 @@ static void cat(FILE *f){
 #ifndef DUPECOLORS
 	case 6: case 9: fputs("\033[K", stdout);
 #endif
-} } }
+    } }
+    putc(p = c, stdout);
+  }
+  while((c = getc(f)) >= 0);
+}
 static void abrt(int signo){ x(); exit(signo); }
 int main(int c, char **v){
+  l = 19;
   signal(SIGINT, abrt);
-  fputs("\033[38;5;16m", stdout); // black text
-  rgb(91, 206, 250);
   if(c < 2) cat(stdin);
   else for(--c, ++v; c; --c, ++v){
     if(**v == '-' && !v[0][1]) cat(stdin);
