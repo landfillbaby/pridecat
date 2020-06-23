@@ -23,10 +23,20 @@ static void cat(FILE *f){
 	case 0: case 4: rgb(91, 206, 250); break;
 	case 1: case 3: rgb(245, 169, 184); break;
 	case 2: fputs("\033[48;5;231m\033[K", stdout); break;
-	case 5: rgb(214, 2, 112); break;
+	case 5:
+#ifdef DUPECOLORS
+	case 6:
+#endif
+		rgb(214, 2, 112); break;
 	case 7: rgb(155, 79, 150); break;
-	case 8: rgb(0, 56, 168); break;
+	case 8:
+#ifdef DUPECOLORS
+	case 9:
+#endif
+		rgb(0, 56, 168); break;
+#ifndef DUPECOLORS
 	case 6: case 9: fputs("\033[K", stdout);
+#endif
 } } }
 static void abrt(int signo){ x(); exit(signo); }
 int main(int c, char **v){
