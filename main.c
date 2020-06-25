@@ -48,8 +48,10 @@ static void catFile(FILE *f){
   int c, prev = '\n';
   while((c = getc(f)) >= 0){
     if(c == '\n'){
-      if(prev == '\n' && g_setBackgroundColor) nextColor();
-      else resetColor();
+      if(prev == '\n'){
+	if(g_setBackgroundColor) nextColor();
+	else resetColor();
+      }
       g_blankLine = true;
     }else if(g_blankLine && !isspace(c)){
       nextColor();
