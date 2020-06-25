@@ -45,6 +45,9 @@ Colorize your terminal output with pride!
 --pansexual,--pan
 	Pansexual pride flag designed by Evie Varney in 2010
 
+--polyamorous,--poly
+	Polyamory pride flag designed by Jim Evans
+
 --transgender,--trans
 	Transgender pride flag designed by Monica Helms in 1999
 ```
