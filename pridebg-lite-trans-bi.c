@@ -17,13 +17,13 @@ static unsigned char l, p;
 static void cat(FILE *f){
   int c = getc(f);
   if(c < 0) return;
-  if(l == 19) {
-    fputs("\033[38;5;16m", stdout); // black text
+  if(l == 19){
+    fputs("\033[38;5;16m\033[48;2;91;206;250m\033[K", stdout); // black text
+    l = 0;
     goto uhh;
   }
   do{
     if(p == '\n'){
-uhh:
       switch(l = (l + 1) % 10){
 	case 0: case 4: rgb(91, 206, 250); break;
 	case 1: case 3: rgb(245, 169, 184); break;
@@ -43,9 +43,9 @@ uhh:
 	case 6: case 9: fputs("\033[K", stdout);
 #endif
     } }
+uhh:
     putc(p = c, stdout);
-  }
-  while((c = getc(f)) >= 0);
+  }while((c = getc(f)) >= 0);
 }
 static void abrt(int signo){ x(); exit(signo); }
 int main(int c, char **v){

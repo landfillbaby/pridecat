@@ -34,7 +34,10 @@ static void cat(FILE *f){
       e = false;
     }else if(!e && C(' ') && C('\t') && C('\r') && C('\f') && C('\v')){
 #ifdef PRIDEHL
-      if(l == 19) fputs("\033[38;5;16m", stdout); // black text
+      if(l == 19){
+	l = 0;
+	fputs("\033[38;5;16m\033[48;2;91;206;250m", stdout); // black text
+      }else
 #endif
       switch(l = (l + 1) % 10){
 	case 0: case 4: rgb(91, 206, 250); break;
