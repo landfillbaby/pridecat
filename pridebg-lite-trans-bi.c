@@ -9,7 +9,6 @@ n = 1: clear from beginning to cursor
 n = 2: clear whole line
 */
 #include <signal.h>
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #define x() if(l != 19) fputs("\033[39;49m\033[K", stdout)
