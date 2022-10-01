@@ -23,7 +23,7 @@ reimplement the printf of hexadecimal?
   if(l != 19) fputs(ESC "9m", stdout)
 #endif
 #define rgb(r, g, b) fputs(ESC "8;2;" #r ";" #g ";" #b "m", stdout)
-static unsigned char l;
+static unsigned l;
 static bool e;
 static void cat(FILE *f) {
   int c;

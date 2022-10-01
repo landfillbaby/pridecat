@@ -14,7 +14,8 @@ n = 2: clear whole line
 #define x() \
   if(l != 19) fputs("\33[39;49m\33[K", stdout)
 #define rgb(r, g, b) fputs("\33[48;2;" #r ";" #g ";" #b "m\33[K", stdout)
-static unsigned char l, p;
+static unsigned l;
+static int p;
 static void cat(FILE *f) {
   int c = getc(f);
   if(c < 0) return;
