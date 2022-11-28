@@ -32,22 +32,10 @@ static void cat(FILE *f) {
 	case 3: rgb(245, 169, 184); break;
 	case 2: fputs("\33[48;5;231m\33[K", stdout); break;
 	case 5:
-#ifdef DUPECOLORS
-	case 6:
-#endif
-	  rgb(214, 2, 112);
-	  break;
+	case 6: rgb(214, 2, 112); break;
 	case 7: rgb(155, 79, 150); break;
 	case 8:
-#ifdef DUPECOLORS
-	case 9:
-#endif
-	  rgb(0, 56, 168);
-	  break;
-#ifndef DUPECOLORS
-	case 6:
-	case 9: fputs("\33[K", stdout);
-#endif
+	case 9: rgb(0, 56, 168); break;
       }
   uhh:
     putc(p = c, stdout);

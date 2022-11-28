@@ -11,9 +11,6 @@ reimplement the printf of hexadecimal?
 #include <stdio.h>
 #include <stdlib.h>
 #ifdef PRIDEHL
-#ifndef DUPECOLORS
-#define DUPECOLORS
-#endif
 #define ESC "\33[4"
 #define x() \
   if(l != 19) fputs("\33[39;49m", stdout)
@@ -48,17 +45,10 @@ static void cat(FILE *f) {
 	  case 3: rgb(245, 169, 184); break;
 	  case 2: /*rgb(255, 255, 255);*/ fputs(ESC "8;5;231m", stdout); break;
 	  case 5:
-#ifdef DUPECOLORS
-	  case 6:
-#endif
-	    rgb(214, 2, 112);
-	    break;
+	  case 6: rgb(214, 2, 112); break;
 	  case 7: rgb(155, 79, 150); break;
 	  case 8:
-#ifdef DUPECOLORS
-	  case 9:
-#endif
-	    rgb(0, 56, 168);
+	  case 9: rgb(0, 56, 168);
 	}
       e = true;
     }
