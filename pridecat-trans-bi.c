@@ -6,6 +6,7 @@ note to self: see getargs.h (not a public file yet)
 
 reimplement the printf of hexadecimal?
 */
+#include <ctype.h>
 #include <signal.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -24,14 +25,13 @@ static unsigned l;
 static bool e;
 static void cat(FILE *f) {
   int c;
-#define C(x) (c != x)
   while((c = getc(f)) >= 0) {
-    if(!C('\n')) {
+    if(c == '\n') {
 #ifdef PRIDEHL
       if(l != 19) fputs(ESC "9m", stdout);
 #endif
       e = false;
-    } else if(!e && C(' ') && C('\t') && C('\r') && C('\f') && C('\v')) {
+    } else if(!e && !isspace(c)) {
 #ifdef PRIDEHL
       if(l == 19) {
 	l = 0;
