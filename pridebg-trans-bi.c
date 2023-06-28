@@ -9,13 +9,14 @@ n = 1: clear from beginning to cursor
 n = 2: clear whole line
 */
 #include <signal.h>
+#include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
 #define x() \
   if(l != 19) fputs("\33[39;49m\33[K", stdout)
 #define rgb(r, g, b) fputs("\33[48;2;" #r ";" #g ";" #b "m\33[K", stdout)
 static unsigned l;
 static int p;
+static bool q;
 static void cat(FILE *f) {
   int c = getc(f);
   if(c < 0) return;
@@ -39,18 +40,18 @@ static void cat(FILE *f) {
       }
   uhh:
     putc(p = c, stdout);
-  } while((c = getc(f)) >= 0);
+  } while(!q && (c = getc(f)) >= 0);
 }
-static void abrt(int signo) {
-  x();
-  exit(signo);
+static void abrt(int x) {
+  (void)x;
+  q = 1; // TODO: more/different q checks?
 }
 int main(int c, char **v) {
   l = 19;
   signal(SIGINT, abrt);
   if(c < 2) cat(stdin);
   else
-    for(--c, ++v; c; --c, ++v)
+    for(--c, ++v; !q && c; --c, ++v)
       if(**v == '-' && !v[0][1]) cat(stdin);
       else {
 	FILE *f = fopen(*v, "r");

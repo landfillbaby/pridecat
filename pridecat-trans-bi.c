@@ -10,7 +10,6 @@ reimplement the printf of hexadecimal?
 #include <signal.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
 #ifdef PRIDEHL
 #define ESC "\33[4"
 #define x() \
@@ -22,10 +21,10 @@ reimplement the printf of hexadecimal?
 #endif
 #define rgb(r, g, b) fputs(ESC "8;2;" #r ";" #g ";" #b "m", stdout)
 static unsigned l;
-static bool e;
+static bool e, q;
 static void cat(FILE *f) {
   int c;
-  while((c = getc(f)) >= 0) {
+  while(!q && (c = getc(f)) >= 0) {
     if(c == '\n') {
 #ifdef PRIDEHL
       if(l != 19) fputs(ESC "9m", stdout);
@@ -55,16 +54,16 @@ static void cat(FILE *f) {
     putc(c, stdout);
   }
 }
-static void abrt(int signo) {
-  x();
-  exit(signo);
+static void abrt(int x) {
+  (void)x;
+  q = 1; // TODO: more/different q checks?
 }
 int main(int c, char **v) {
   l = 19;
   signal(SIGINT, abrt);
   if(c < 2) cat(stdin);
   else
-    for(--c, ++v; c; --c, ++v)
+    for(--c, ++v; !q && c; --c, ++v)
       if(**v == '-' && !v[0][1]) cat(stdin);
       else {
 	FILE *f = fopen(*v, "r");
@@ -72,12 +71,12 @@ int main(int c, char **v) {
 	  x();
 	  fprintf(stderr,
 #ifdef PRIDEHL
-	    "pridehl"
+	      "pridehl"
 #else
-	    "pridecat"
+	      "pridecat"
 #endif
-	    ": Couldn't open \"%s\" for reading.\n",
-	    *v);
+	      ": Couldn't open \"%s\" for reading.\n",
+	      *v);
 	  return 1;
 	}
 	cat(f);
