@@ -9,14 +9,13 @@ n = 1: clear from beginning to cursor
 n = 2: clear whole line
 */
 #include <signal.h>
-#include <stdbool.h>
 #include <stdio.h>
 #define x() \
   if(l != 19) fputs("\33[39;49m\33[K", stdout)
 #define rgb(r, g, b) fputs("\33[48;2;" #r ";" #g ";" #b "m\33[K", stdout)
 static unsigned l;
 static int p;
-static bool q;
+static volatile sig_atomic_t q;
 static void cat(FILE *f) {
   int c = getc(f);
   if(c < 0) return;

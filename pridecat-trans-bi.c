@@ -21,7 +21,8 @@ reimplement the printf of hexadecimal?
 #endif
 #define rgb(r, g, b) fputs(ESC "8;2;" #r ";" #g ";" #b "m", stdout)
 static unsigned l;
-static bool e, q;
+static bool e;
+static volatile sig_atomic_t q;
 static void cat(FILE *f) {
   int c;
   while(!q && (c = getc(f)) >= 0) {
@@ -29,7 +30,7 @@ static void cat(FILE *f) {
 #ifdef PRIDEHL
       if(l != 19) fputs(ESC "9m", stdout);
 #endif
-      e = false;
+      e = 0;
     } else if(!e && !isspace(c)) {
 #ifdef PRIDEHL
       if(l == 19) {
@@ -49,7 +50,7 @@ static void cat(FILE *f) {
 	  case 8:
 	  case 9: rgb(0, 56, 168);
 	}
-      e = true;
+      e = 1;
     }
     putc(c, stdout);
   }
